@@ -3,7 +3,7 @@ import Home from "../pages/Home"
 import Breed from "../pages/Breed"
 
 const routes =  [
-    {path: '/', component: Home},
+    {path: '/', component: Home, name: 'Home'},
     {path: '/:name', component: Breed, name: 'Breed'},
 ];
 

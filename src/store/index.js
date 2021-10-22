@@ -7,56 +7,92 @@ Vue.use(Vuex)
 export default new Vuex.Store({
     state: {
         breedList: [],
-        breed: {
+        selectedBreed: {
             name:  null,
-            image: null
+            images: []
         },
+      likedImages:[],
+      sortAlphabet: false
     },
     mutations: {
         setBreedList(state, breedList){
             state.breedList = breedList
         },
-        setBreed(state, name, image){
-            state.breed.name = name
-            state.breed.image = image
+        setSelectedBreed(state, {name, images}){
+            state.selectedBreed.name = name
+            state.selectedBreed.images = images
+        },
+      updateBreedRandomImage(state, {name, randomImage}){
+        const breedIndex = state.breedList.findIndex(breed => breed.name === name)
+        Object.assign(state.breedList[breedIndex], { randomImage: randomImage });
+        state.breedList = [... state.breedList]
+      },
+        updateSort(state, sortAlphabet){
+          state.sortAlphabet = sortAlphabet
+        },
+        updateLikedImages(state, likedImages){
+          state.sortAlphabet = likedImages
         },
     },
     getters:{
         breedList: state =>  state.breedList,
+        selectedBreed: state =>  state.selectedBreed,
+        sortAlphabet: state =>  state.sortAlphabet,
+        likedImages: state =>  state.likedImages,
+
     },
     actions:{
-      getBreedList(context) {
+        getBreedList(context) {
           const breeds = [];
             return axios
               .get("https://dog.ceo/api/breeds/list/all")
               .then(async (response) =>  {
-                  for (let breedItem of Object.entries(response.data.message)) {
-                    if(!breedItem[1].length){
-                      const image = await context.dispatch('getBreedImage', breedItem[0])
-                      breeds.push({name: breedItem[0], image: image})
-                    }else{
-                      for(let breed of breedItem[1]){
-                        const breedName = `${breedItem[0]} ${breed}`;
-                        const breedNameCapitalized = breedName.toLowerCase().split(' ').map(s => s.charAt(0).toUpperCase() + s.substring(1)).join(' ');
-                        const image = await context.dispatch('getBreedImage', `${breedItem[0]}/${breed}`)
-                        breeds.push({name: breedNameCapitalized, image: image})
-                      }
-                    }
-                  }
-                  context.commit('setBreedList', breeds)
+                for (let breedItem of Object.entries(response.data.message)) {
+                  breeds.push({id: breedItem[0], name: breedItem[0], subBreed: breedItem[1], images: [] } )
+                }
+                context.commit('setBreedList', breeds)
+
               }).catch(err => {
                   console.log(err)
               })
         },
-        getBreedImage(context, name){
+        getBreedRandomImage(context, name){
             return axios
                 .get(`https://dog.ceo/api/breed/${name}/images/random`)
                 .then(response => {
-                  return  response.data.message
-                 }).catch(err => {
+                  context.commit('updateBreedRandomImage', {name, randomImage: response.data.message})
+                  // return  response.data.message
+                }).catch(err => {
                   console.log(err)
-              })
+                })
         },
+      getSelectedBreedInfo(context, name){
+
+          return axios.get(`https://dog.ceo/api/breed/${name}/images`).then(response => {
+            const images  = response.data.message;
+            context.commit('setSelectedBreed', {
+              name,images
+            })
+          })
+
+      },
+      getSelectedBreedImages(context, name){
+        return axios
+          .get(`https://dog.ceo/api/breed/${name}/images`)
+          .then(response => {
+            const images = response.data.message
+
+            context.commit('setSelectedBreed', {
+              name,
+              images
+            })
+          }).catch(err => {
+            console.log(err)
+          })
+      },
+      // updateLikedImages(context, {imageName, isLiked}){
+      //     this.context.state.likedImages.filter()
+      // }
     }
 
 });
