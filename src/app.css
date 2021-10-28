@@ -1,32 +1,43 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:wght@200;300;400;500&family=IBM+Plex+Sans:wght@200;300;400;500;600&display=swap');
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-
-#app {
-  font-family: IBM Plex Sans, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
+a, a:hover, a:focus{
+  text-decoration: none;
   color: rgba(98, 98, 98, 1);
-  min-height: 100vh;
 }
 
-.flex{
+
+#app {
+  font-family: 'IBM Plex Sans', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: rgba(98, 98, 98, 1);
+  min-height: 100vh;
+  font-size: 16px;
   display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  align-content: stretch;
 }
 
 .container{
-  padding: 60px;
+  padding: 0 60px;
   background: #151419;
-  height: 100%;
-
+  flex: 1;
 }
 
 .image-list{
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns:repeat(3, 1fr);
+  grid-template-rows: auto;
+  column-gap: 30px;
+  row-gap: 30px;
+
 }
+

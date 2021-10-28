@@ -7,20 +7,13 @@ Vue.use(Vuex)
 export default new Vuex.Store({
     state: {
         breedList: [],
-        selectedBreed: {
-            name:  null,
-            images: []
-        },
-      likedImages:[],
-      sortAlphabet: false
+        likedImages:[],
+        sortAlphabet: false
     },
     mutations: {
         setBreedList(state, breedList){
             state.breedList = breedList
-        },
-        setSelectedBreed(state, {name, images}){
-            state.selectedBreed.name = name
-            state.selectedBreed.images = images
+            state.breedList = [... state.breedList]
         },
       updateBreedRandomImage(state, {name, randomImage}){
         const breedIndex = state.breedList.findIndex(breed => breed.name === name)
@@ -31,8 +24,14 @@ export default new Vuex.Store({
           state.sortAlphabet = sortAlphabet
         },
         updateLikedImages(state, likedImages){
-          state.sortAlphabet = likedImages
+          state.likedImages = likedImages
         },
+      setSelectedBreedImages(state, {name, images}){
+        const breedIndex = state.breedList.findIndex(breed => breed.name === name);
+        Object.assign(state.breedList[breedIndex], { images: images });
+        state.breedList = [... state.breedList]
+
+        }
     },
     getters:{
         breedList: state =>  state.breedList,
@@ -47,8 +46,8 @@ export default new Vuex.Store({
             return axios
               .get("https://dog.ceo/api/breeds/list/all")
               .then(async (response) =>  {
-                for (let breedItem of Object.entries(response.data.message)) {
-                  breeds.push({id: breedItem[0], name: breedItem[0], subBreed: breedItem[1], images: [] } )
+                for (let breedItem of Object.keys(response.data.message)) {
+                  breeds.push({id: breedItem, name: breedItem, images: [], randomImage: '' } )
                 }
                 context.commit('setBreedList', breeds)
 
@@ -61,18 +60,20 @@ export default new Vuex.Store({
                 .get(`https://dog.ceo/api/breed/${name}/images/random`)
                 .then(response => {
                   context.commit('updateBreedRandomImage', {name, randomImage: response.data.message})
-                  // return  response.data.message
                 }).catch(err => {
                   console.log(err)
                 })
         },
       getSelectedBreedInfo(context, name){
-
           return axios.get(`https://dog.ceo/api/breed/${name}/images`).then(response => {
             const images  = response.data.message;
-            context.commit('setSelectedBreed', {
-              name,images
+            // context.commit('setSelectedBreed', name)
+
+            context.commit('setSelectedBreedImages', {
+              name,
+              images
             })
+
           })
 
       },
@@ -80,19 +81,14 @@ export default new Vuex.Store({
         return axios
           .get(`https://dog.ceo/api/breed/${name}/images`)
           .then(response => {
-            const images = response.data.message
-
-            context.commit('setSelectedBreed', {
+            context.commit('setSelectedBreedImages', {
               name,
-              images
+              images: response.data.message
             })
           }).catch(err => {
             console.log(err)
           })
       },
-      // updateLikedImages(context, {imageName, isLiked}){
-      //     this.context.state.likedImages.filter()
-      // }
     }
 
 });

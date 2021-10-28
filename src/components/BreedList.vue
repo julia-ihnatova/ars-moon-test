@@ -1,7 +1,11 @@
 <template>
 <div v-scroll="onScroll">
   <div class="image-list">
-    <BreedItem v-for="(dog, index) in breeds" :key="index" :breedName="dog.name" :breedRandomImage="dog.randomImage"/>
+    <div class="image-item" v-for="(dog, index) in breeds" :key="index">
+      <router-link  :to="{ name: 'Breed', params: {name: dog.name }}" >
+        <BreedItem  :breedName="dog.name" :breedRandomImage="dog.randomImage" />
+      </router-link>
+    </div>
   </div>
   <div v-if="loading">Loading...</div>
 </div>
@@ -76,9 +80,10 @@ return {
 }
 </script>
 
-<style scoped>
-.breed-image{
-  position: relative;
+<style scoped lang="scss">
+
+.image-list >div:first-child {
+  grid-column: 1 / -1;
 }
 
 </style>

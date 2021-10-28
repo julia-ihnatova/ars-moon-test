@@ -1,20 +1,15 @@
 <template>
-    <div class="container">
-      <div>
-        <SwitchSort/>
-      </div>
+
       <BreedList />
-    </div>
 </template>
 
 <script>
 
-import SwitchSort from "@/components/SwitchSort";
 import BreedList from "@/components/BreedList";
 
 export default {
   name: "Home",
-  components: { SwitchSort, BreedList},
+  components: { BreedList},
   data(){
     return {
     }
@@ -25,5 +20,7 @@ export default {
 </script>
 
 <style scoped>
+
+
 
 </style>

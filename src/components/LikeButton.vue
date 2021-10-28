@@ -1,7 +1,7 @@
 <template>
-<button @click.prevent="toggleLike()" class="like">
-  <span>{{isLiked ? 	"\u2665" : "\u2661" }} </span>
-</button>
+<div @click.prevent="toggleLike()" class="like">
+  <img :src="isLiked ? require('../assets/heart.svg') : require( '../assets/heart.svg')" alt="heart"/>
+</div>
 </template>
 
 <script>

@@ -1,6 +1,6 @@
 <template>
-  <div>
-    Сортировка по алфавиту
+  <div class="switch-sort">
+    <div class="text"> Сортировка по алфавиту</div>
     <label class="switch">
       <input :value="sortAlphabet" type="checkbox" @input="updateSort">
       <span class="slider round"></span>
@@ -32,11 +32,19 @@ return {
 </script>
 
 <style scoped>
+.switch-sort{
+  position: absolute;
+  right:0;
+  display: flex;
+  align-items: center;
+}
+
+
 .switch {
   position: relative;
-  display: inline-block;
-  width: 60px;
-  height: 34px;
+  width: 30px;
+  height: 15px;
+  margin-left:15px;
 }
 
 .switch input {display:none;}
@@ -48,7 +56,6 @@ return {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #ccc;
   -webkit-transition: .4s;
   transition: .4s;
 }
@@ -56,17 +63,17 @@ return {
 .slider:before {
   position: absolute;
   content: "";
-  height: 26px;
-  width: 26px;
-  left: 4px;
-  bottom: 4px;
-  background-color: white;
+  height: 9px;
+  width: 10px;
+  left: 2px;
+  bottom: 2px;
+  background-color: rgba(98, 98, 98, 1);
   -webkit-transition: .4s;
   transition: .4s;
 }
 
 input:checked + .slider {
-  background-color: #2196F3;
+
 }
 
 input:focus + .slider {
@@ -74,14 +81,15 @@ input:focus + .slider {
 }
 
 input:checked + .slider:before {
-  -webkit-transform: translateX(26px);
-  -ms-transform: translateX(26px);
-  transform: translateX(26px);
+  -webkit-transform: translateX(12px);
+  -ms-transform: translateX(12px);
+  transform: translateX(12px);
 }
 
 /* Rounded sliders */
 .slider.round {
-  border-radius: 34px;
+  border: 1px solid rgba(98, 98, 98, 1);
+  border-radius: 9px;
 }
 
 .slider.round:before {
