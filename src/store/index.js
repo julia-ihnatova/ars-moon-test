@@ -28,9 +28,9 @@ export default new Vuex.Store({
         },
       setSelectedBreedImages(state, {name, images}){
         const breedIndex = state.breedList.findIndex(breed => breed.name === name);
+        console.log(breedIndex)
         Object.assign(state.breedList[breedIndex], { images: images });
         state.breedList = [... state.breedList]
-
         }
     },
     getters:{
@@ -41,20 +41,20 @@ export default new Vuex.Store({
 
     },
     actions:{
-        getBreedList(context) {
-          const breeds = [];
-            return axios
-              .get("https://dog.ceo/api/breeds/list/all")
-              .then(async (response) =>  {
-                for (let breedItem of Object.keys(response.data.message)) {
-                  breeds.push({id: breedItem, name: breedItem, images: [], randomImage: '' } )
-                }
-                context.commit('setBreedList', breeds)
+      getBreedList(context) {
+        const breeds = [];
+        return axios
+          .get("https://dog.ceo/api/breeds/list/all")
+          .then(async (response) =>  {
+            for (let breedItem of Object.keys(response.data.message)) {
+              breeds.push({id: breedItem, name: breedItem } )
+            }
+            context.commit('setBreedList', breeds)
 
-              }).catch(err => {
-                  console.log(err)
-              })
-        },
+          }).catch(err => {
+            console.log(err)
+          })
+      },
         getBreedRandomImage(context, name){
             return axios
                 .get(`https://dog.ceo/api/breed/${name}/images/random`)
@@ -64,29 +64,16 @@ export default new Vuex.Store({
                   console.log(err)
                 })
         },
-      getSelectedBreedInfo(context, name){
+        getSelectedBreedImages(context, name){
           return axios.get(`https://dog.ceo/api/breed/${name}/images`).then(response => {
             const images  = response.data.message;
-            // context.commit('setSelectedBreed', name)
-
             context.commit('setSelectedBreedImages', {
               name,
               images
             })
 
-          })
+            return images;
 
-      },
-      getSelectedBreedImages(context, name){
-        return axios
-          .get(`https://dog.ceo/api/breed/${name}/images`)
-          .then(response => {
-            context.commit('setSelectedBreedImages', {
-              name,
-              images: response.data.message
-            })
-          }).catch(err => {
-            console.log(err)
           })
       },
     }

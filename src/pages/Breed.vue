@@ -1,8 +1,8 @@
 <template>
-  <div class="container">
+  <div class="container" v-scroll="onScroll">
     <div class="image-list">
-      <div class="image-item" v-for="(photo, index) in selectedBreed" :key="index">
-        <BreedItem  :breedName="selectedBreed" :breedRandomImage="photo" />
+      <div class="image-item" v-for="(photo, index) in images" :key="index">
+        <BreedItem  :breedName="name" :breedRandomImage="photo" />
       </div>
     </div>
   </div>
@@ -17,16 +17,20 @@ name: "Breed",
 data(){
 return {
   loading: false,
-  info:{}
+  name: '',
+  images:[],
+  error: '',
+  count: 20
 }
 },
   components:{ BreedItem },
   computed: {
     ...mapGetters([
-      "selectedBreed",
+      "breedList",
     ]),
   },
   mounted(){
+    this.name = this.$route.params.name;
     this.loadBreed()
 
   },
@@ -34,20 +38,28 @@ return {
     async loadBreed(){
       try {
         this.loading  = true;
-        //если их нет, то надо сделать запрос
-
-        this.info  =  await this.getSelectedBreedInfo(this.$route.params.name);
-        //взять из return изображения
-
-
+        const breedIndex = this.breedList.findIndex(breed => breed.name === this.name);
+        if(breedIndex < 0){
+          this.error =  "Что это ща порода такая?";
+          return;
+        }
+        if(this.breedList[breedIndex].images){
+          this.images =  this.breedList[breedIndex].images
+        }else{
+          this.images  =  await this.getSelectedBreedImages(this.$route.params.name);
+        }
       } catch (ex) {
         console.log(ex)
       }finally {
         this.loading  = false;
       }
     },
-    ...mapActions(["getSelectedBreedInfo"])
-  }
+    onScroll(){
+
+    },
+    ...mapActions(["getSelectedBreedImages"])
+  },
+
 }
 </script>
 

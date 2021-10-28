@@ -55,7 +55,7 @@ name: "Accordion",
     return {
       isOpen: false
     }
-  }
+  },
 }
 </script>
 

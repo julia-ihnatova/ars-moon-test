@@ -5,7 +5,7 @@ import Liked from "@/pages/Liked";
 
 const routes =  [
     {path: '/', component: Home, name: 'Home'},
-    {path: '/:name', component: Breed, name: 'Breed'},
+    {path: '/:name', component: Breed, name: 'Breed', props: true},
     {path: '/liked', component: Liked, name: 'Liked'},
 
 ];
