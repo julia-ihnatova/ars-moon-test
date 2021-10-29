@@ -2,7 +2,8 @@
   <div class="breed-item">
     <img v-if="breedRandomImage" :src="breedRandomImage" :alt="breedName" class="breed-image"/>
     <div v-else>Load image...</div>
-    <LikeButton  v-if="breedRandomImage" :isLiked="likedImages.includes(breedRandomImage) " @toggleLike="toggleLike" class="liked-button"/>
+    <LikeButton v-if="breedRandomImage" :isLiked="likedList.some(dog => dog.image === breedRandomImage)"
+                @toggleLike="toggleLike" class="liked-button"/>
     <div class="breed-name">{{ howBreedCalls }}</div>
   </div>
 
@@ -10,43 +11,41 @@
 </template>
 
 <script>
-import {  mapGetters, mapMutations } from "vuex";
+import { mapGetters, mapMutations } from "vuex";
 
 import LikeButton from "@/components/LikeButton";
 
 export default {
-name: "BreedItem",
-  props:{
+  name: "BreedItem",
+  props: {
     breedName: {required: true},
     breedRandomImage: {required: false}
   },
-  data(){
-    return {
-    }
+  data() {
+    return {}
   },
   mounted() {
   },
-  components:{ LikeButton },
-  methods:{
-    toggleLike( isLiked){
-      if(isLiked){
-        this.likedList.push(this.breedRandomImage);
-
+  components: {LikeButton},
+  methods: {
+    toggleLike(like) {
+      if (like) {
+        this.likedList = [{image: this.breedRandomImage, breed: this.breedName}, ...this.likedList]
+      } else {
+        this.likedList = this.likedList.filter(dog => dog.image !== this.breedRandomImage)
       }
-      console.log( this.likedList);
     },
     ...mapMutations(['updateLikedImages'])
   },
   computed: {
-    howBreedCalls(){
+    howBreedCalls() {
       return this.breedName.toLowerCase().split(' ').map(s => s.charAt(0).toUpperCase() + s.substring(1)).join(' ');
     },
-    likedList:{
-      get(){
+    likedList: {
+      get() {
         return this.likedImages
       },
-      set(newVal){
-
+      set(newVal) {
         this.updateLikedImages(newVal)
       }
     },
@@ -57,23 +56,23 @@ name: "BreedItem",
 }
 </script>
 
-<style scoped  lang="scss">
+<style scoped lang="scss">
 
-.breed-item{
+.breed-item {
   position: relative;
 }
 
-a img, img{
+a img, img {
   max-width: 100%;
   width: 100%;
   border-radius: 9px;
 }
 
-.breed-name, .liked-button{
+.breed-name, .liked-button {
   position: absolute;
 }
 
-.breed-name{
+.breed-name {
   color: white;
   font-weight: 600;
   font-size: 25px;
@@ -82,18 +81,18 @@ a img, img{
   right: 25px;
 }
 
-.liked-button{
+.liked-button {
   top: 25px;
   left: 25px;
 }
 
-.image-list >div:first-child {
-.breed-name{
-  bottom: 50px;
-  right: 50px;
-}
+.image-list > div:first-child {
+  .breed-name {
+    bottom: 50px;
+    right: 50px;
+  }
 
-  .liked-button{
+  .liked-button {
     top: 35px;
     left: 35px;
   }

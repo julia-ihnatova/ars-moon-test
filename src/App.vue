@@ -1,9 +1,9 @@
 <template>
   <div id="app">
-    <Header />
+    <Header/>
     <div class="container">
       <div class="top-options">
-        <Accordion />
+        <Accordion/>
         <SwitchSort v-if="$route.name !== 'Breed'"/>
       </div>
       <router-view :key="$route.path"></router-view>
@@ -15,6 +15,7 @@
 import Header from "@/components/Header";
 import Accordion from "@/components/Accordion";
 import SwitchSort from "@/components/SwitchSort";
+
 export default {
   name: 'App',
   components: {
@@ -28,7 +29,7 @@ export default {
 <style>
 @import './app.css';
 
-.top-options{
+.top-options {
   position: relative;
   display: flex;
   justify-content: space-between;

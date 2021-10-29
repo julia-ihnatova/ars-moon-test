@@ -12,29 +12,27 @@
 import { mapState } from "vuex";
 
 export default {
-name: "SwitchSort",
-data(){
-return {
-
-}
-},
+  name: "SwitchSort",
+  data() {
+    return {}
+  },
   computed: {
     ...mapState({
       sortAlphabet: state => state.sortAlphabet
     })
   },
   methods: {
-    updateSort (e) {
-      this.$store.commit('updateSort',e.target.checked)
+    updateSort(e) {
+      this.$store.commit('updateSort', e.target.checked)
     },
   }
 }
 </script>
 
 <style scoped>
-.switch-sort{
+.switch-sort {
   position: absolute;
-  right:0;
+  right: 0;
   display: flex;
   align-items: center;
 }
@@ -44,10 +42,12 @@ return {
   position: relative;
   width: 30px;
   height: 15px;
-  margin-left:15px;
+  margin-left: 15px;
 }
 
-.switch input {display:none;}
+.switch input {
+  display: none;
+}
 
 .slider {
   position: absolute;

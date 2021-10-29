@@ -6,7 +6,7 @@
   box-sizing: border-box;
 }
 
-a, a:hover, a:focus{
+a, a:hover, a:focus {
   text-decoration: none;
   color: rgba(98, 98, 98, 1);
 }
@@ -26,13 +26,13 @@ a, a:hover, a:focus{
   align-content: stretch;
 }
 
-.container{
+.container {
   padding: 0 60px;
   background: #151419;
   flex: 1;
 }
 
-.image-list{
+.image-list {
   display: grid;
   grid-template-columns:repeat(3, 1fr);
   grid-template-rows: auto;
