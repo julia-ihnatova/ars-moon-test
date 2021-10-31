@@ -4,7 +4,7 @@
     <div v-else>Load image...</div>
     <LikeButton v-if="breedRandomImage" :isLiked="likedList.some(dog => dog.image === breedRandomImage)"
                 @toggleLike="toggleLike" class="liked-button"/>
-    <div class="breed-name">{{ howBreedCalls }}</div>
+    <div class="breed-name">{{ breedName | capitalize }}</div>
   </div>
 
 
@@ -38,9 +38,6 @@ export default {
     ...mapMutations(['updateLikedImages'])
   },
   computed: {
-    howBreedCalls() {
-      return this.breedName.toLowerCase().split(' ').map(s => s.charAt(0).toUpperCase() + s.substring(1)).join(' ');
-    },
     likedList: {
       get() {
         return this.likedImages

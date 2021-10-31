@@ -19,53 +19,55 @@ export default {
   name: "BreedList",
   data() {
     return {
-      breeds: [],
-      count: 0,
-      loading: false
+
+      offset: 0,
+      loading: false,
     }
   },
   computed: {
+    breeds() {
+      return this.breedList.slice(0, this.offset + 20);
+    },
     ...mapGetters([
       "breedList",
       "sortAlphabet",
-      "likedImages"
+      "likedImages",
+      "breedsLoading"
     ]),
   },
   components: {BreedItem},
-  mounted() {
-    this.loadBreedList()
+  beforeMount() {
+    this.loadBreedList();
   },
   methods: {
     async loadBreedList() {
       try {
         this.loading = true;
-        await this.getBreedList();
+        if(!this.breedList.length && !this.breedsLoading){
+          await this.getBreedList();
+        }
         await this.loadMoreBreeds();
       } catch (ex) {
         console.log(ex)
-      } finally {
+      }finally{
         this.loading = false;
       }
     },
     onScroll() {
       let bottomOfWindow = document.documentElement.scrollTop + window.innerHeight >= document.documentElement.offsetHeight;
       if (bottomOfWindow) {
-        setTimeout(() => this.loadMoreBreeds(), 1000)
+        this.loadMoreBreeds();
       }
     },
     async loadMoreBreeds() {
       this.loading = true;
-      this.breeds = [...this.breeds, ...this.breedList.slice(this.count, this.count + 20)];
-      this.breeds.sort(function () {
-        return 0.5 - Math.random()
-      });
 
-
-      for (let breed of this.breedList.slice(this.count, this.count + 20)) {
+      await Promise.all(this.breedList.slice(this.offset, this.offset + 20).map(async (breed) => {
         await this.getBreedRandomImage(breed.name);
-      }
+      }));
 
-      this.count += 20;
+      // Comment to work
+      this.offset += 20;
       this.loading = false;
     },
     ...mapActions(['getBreedList', 'getBreedRandomImage'])

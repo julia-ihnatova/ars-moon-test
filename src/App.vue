@@ -3,24 +3,24 @@
     <Header/>
     <div class="container">
       <div class="top-options">
-        <Accordion/>
+        <BreedSelector/>
         <SwitchSort v-if="$route.name !== 'Breed'"/>
       </div>
-      <router-view :key="$route.path"></router-view>
+      <router-view :key="$route.fullPath"></router-view>
     </div>
   </div>
 </template>
 
 <script>
 import Header from "@/components/Header";
-import Accordion from "@/components/Accordion";
+import BreedSelector from "@/components/BreedSelector";
 import SwitchSort from "@/components/SwitchSort";
 
 export default {
   name: 'App',
   components: {
     SwitchSort,
-    Accordion,
+    BreedSelector,
     Header
   }
 }

@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 import BreedItem from "@/components/BreedItem";
 
 export default {
@@ -17,47 +17,53 @@ export default {
   data() {
     return {
       loading: false,
-      name: '',
       images: [],
-      count: 20
+      count: 20,
+      name: '',
     }
   },
   components: {BreedItem},
   computed: {
+    breedIndex(){
+      return this.breedList.findIndex(breed => breed.name === this.name);
+    },
     ...mapGetters([
       "breedList",
     ]),
   },
-  mounted() {
+  mounted(){
     this.name = this.$route.params.name;
-    this.loadBreed()
+     this.loadBreed();
   },
   methods: {
+
+    onScroll() {
+
+    },
     async loadBreed() {
       try {
         this.loading = true;
-        let breedIndex = this.breedList.findIndex(breed => breed.name === this.name);
-        if (breedIndex < 0) {
-          this.addBreedToList(this.name);
-          breedIndex = this.breedList.findIndex(breed => breed.name === this.name);
-        }
-        if (this.breedList[breedIndex].images) {
-          this.images = this.breedList[breedIndex].images
+
+        if(this.breedList < 0 || this.breedList.length === 0) return;
+
+        if (this.breedList[this.breedIndex].images) {
+          this.images = this.breedList[this.breedIndex].images;
         } else {
           this.images = await this.getSelectedBreedImages(this.$route.params.name);
         }
       } catch (ex) {
-        console.log(ex)
+        console.log(ex);
       } finally {
         this.loading = false;
       }
     },
-    onScroll() {
-
-    },
     ...mapActions(["getSelectedBreedImages"]),
-    ...mapMutations(["addBreedToList"])
   },
+  watch:{
+     breedIndex(){
+       this.loadBreed()
+    }
+  }
 
 }
 </script>

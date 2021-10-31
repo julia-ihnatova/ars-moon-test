@@ -12,12 +12,18 @@ Vue.directive("scroll", {
   inserted: function (el, binding) {
     let f = function (evt) {
       if (binding.value(evt, el)) {
-        window.removeEventListener('scroll', f)
+        window.removeEventListener('scroll', f);
       }
     }
-    window.addEventListener('scroll', f)
+    window.addEventListener('scroll', f);
   }
-})
+});
+
+Vue.filter('capitalize', function (value) {
+  if (!value) return ''
+  value = value.toString()
+  return value.charAt(0).toUpperCase() + value.slice(1)
+});
 
 new Vue({
   router,
