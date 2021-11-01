@@ -34,7 +34,6 @@ export default {
   async mounted() {
     await this.ensureBreedListLoaded();
     this.createAlphabetChankedList();
-    this.isOpen = false;
   },
   methods: {
     async ensureBreedListLoaded() {
@@ -61,6 +60,11 @@ export default {
       }
     },
     ...mapActions(["getBreedList"])
+  },
+  watch:{
+    $route(){
+      this.isOpen = false;
+    }
   },
   computed:{
     ...mapGetters(["breedList"])

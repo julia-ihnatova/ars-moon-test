@@ -1,7 +1,7 @@
 <template>
   <div class="image-list">
     <div class="image-item" v-for="(dog, index) in likedImages" :key="index">
-      <BreedItem :breedName="dog.breed" :breedRandomImage="dog.image"/>
+      <BreedItem :name="dog.breed" :image="dog.image"/>
     </div>
   </div>
 </template>

@@ -35,16 +35,22 @@ header {
 
   .chosen {
     margin-left: auto;
+
+    .text {
+      position: relative;
+      bottom: 3px;
+    }
+
+    img {
+      margin-left: 10px;
+    }
+
+    .router-link-active{
+      color: #fff;
+    }
   }
 
-  .chosen .text {
-    position: relative;
-    bottom: 3px;
-  }
 
-  .chosen img {
-    margin-left: 10px;
-  }
 }
 
 </style>

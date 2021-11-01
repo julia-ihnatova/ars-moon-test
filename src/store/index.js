@@ -1,6 +1,6 @@
 import Vuex from "vuex";
-import axios from "axios";
 import Vue from 'vue'
+import { getAllBreedsFromApi, getBreedRandomImageFromApi, getSelectedBreedImagesFromApi } from "@/services/api";
 
 Vue.use(Vuex)
 
@@ -52,10 +52,8 @@ export default new Vuex.Store({
 
       try {
         context.commit("setBreedsLoading", true);
-        const response = await axios.get("https://dog.ceo/api/breeds/list/all");
-
-        for (let breedItem of Object.keys(response.data.message)) {
-
+        const {message:allBreeds} = await getAllBreedsFromApi();
+        for (let breedItem of Object.keys(allBreeds)) {
           breeds.push({
             name: breedItem
           });
@@ -72,17 +70,16 @@ export default new Vuex.Store({
     },
     async getBreedRandomImage(context, name) {
       try {
-        const response = await axios.get(`https://dog.ceo/api/breed/${name}/images/random`);
-        context.commit('updateBreedRandomImage', {name, randomImage: response.data.message})
+        const {message:randomImage} = await getBreedRandomImageFromApi(name)
+        context.commit('updateBreedRandomImage', {name, randomImage})
+        return randomImage;
       } catch (ex) {
         console.log(ex)
       }
     },
     async getSelectedBreedImages(context, name) {
       try {
-        const response = await axios.get(`https://dog.ceo/api/breed/${name}/images`);
-        const images = response.data.message;
-
+        const { message:images } = await getSelectedBreedImagesFromApi(name);
         context.commit('setSelectedBreedImages', {
           name,
           images
@@ -92,7 +89,6 @@ export default new Vuex.Store({
       } catch (ex) {
         console.log(ex)
       }
-
     },
   }
 

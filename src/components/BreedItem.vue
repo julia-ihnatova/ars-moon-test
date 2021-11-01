@@ -1,41 +1,49 @@
 <template>
   <div class="breed-item">
-    <img v-if="breedRandomImage" :src="breedRandomImage" :alt="breedName" class="breed-image"/>
+    <img v-if="imageSrc" :src="imageSrc" :alt="name" class="breed-image"/>
     <div v-else>Load image...</div>
-    <LikeButton v-if="breedRandomImage" :isLiked="likedList.some(dog => dog.image === breedRandomImage)"
+    <LikeButton v-if="imageSrc" :isLiked="likedList.some(dog => dog.image === imageSrc)"
                 @toggleLike="toggleLike" class="liked-button"/>
-    <div class="breed-name">{{ breedName | capitalize }}</div>
+    <div class="breed-name">{{ name | capitalize }}</div>
   </div>
 
 
 </template>
 
 <script>
-import { mapGetters, mapMutations } from "vuex";
+import { mapActions, mapGetters, mapMutations } from "vuex";
 
 import LikeButton from "@/components/LikeButton";
 
 export default {
   name: "BreedItem",
   props: {
-    breedName: {required: true},
-    breedRandomImage: {required: false}
+    name: {required: true},
+    image: {required: false}
   },
   data() {
-    return {}
+    return {
+      imageSrc: '',
+    }
   },
-  mounted() {
+  async mounted() {
+    if(this.image){
+      this.imageSrc = this.image
+    }else{
+      this.imageSrc = await this.getBreedRandomImage(this.name);
+    }
   },
   components: {LikeButton},
   methods: {
     toggleLike(like) {
       if (like) {
-        this.likedList = [{image: this.breedRandomImage, breed: this.breedName}, ...this.likedList]
+        this.likedList = [{image: this.imageSrc, breed: this.name}, ...this.likedList]
       } else {
-        this.likedList = this.likedList.filter(dog => dog.image !== this.breedRandomImage)
+        this.likedList = this.likedList.filter(dog => dog.image !== this.image)
       }
     },
-    ...mapMutations(['updateLikedImages'])
+    ...mapMutations(['updateLikedImages']),
+    ...mapActions(['getBreedRandomImage'])
   },
   computed: {
     likedList: {

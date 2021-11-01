@@ -1,9 +1,9 @@
 <template>
   <div v-scroll="onScroll">
     <div class="image-list">
-      <div class="image-item" v-for="(dog, index) in breeds" :key="index">
+      <div class="image-item" v-for="dog in breeds" :key="dog.name">
         <router-link :to="{ name: 'Breed', params: {name: dog.name }}">
-          <BreedItem :breedName="dog.name" :breedRandomImage="dog.randomImage"/>
+          <BreedItem :name="dog.name"/>
         </router-link>
       </div>
     </div>
@@ -15,18 +15,20 @@
 import { mapActions, mapGetters } from "vuex";
 import BreedItem from "@/components/BreedItem";
 
+const OFFSET_STEP = 20;
+
 export default {
   name: "BreedList",
   data() {
     return {
-
       offset: 0,
       loading: false,
+      sortedBreeds:[]
     }
   },
   computed: {
-    breeds() {
-      return this.breedList.slice(0, this.offset + 20);
+    breeds(){
+      return this.getBreedsForShow()
     },
     ...mapGetters([
       "breedList",
@@ -46,6 +48,8 @@ export default {
         if(!this.breedList.length && !this.breedsLoading){
           await this.getBreedList();
         }
+
+        //load images for breeds  that are showing on the page
         await this.loadMoreBreeds();
       } catch (ex) {
         console.log(ex)
@@ -62,29 +66,23 @@ export default {
     async loadMoreBreeds() {
       this.loading = true;
 
-      await Promise.all(this.breedList.slice(this.offset, this.offset + 20).map(async (breed) => {
-        await this.getBreedRandomImage(breed.name);
-      }));
-
-      // Comment to work
-      this.offset += 20;
+      // Increase offset
+      this.offset += OFFSET_STEP;
       this.loading = false;
     },
-    ...mapActions(['getBreedList', 'getBreedRandomImage'])
-
-  },
-  watch: {
-    sortAlphabet(newSort) {
-      if (newSort) {
-        this.breeds.sort((a, b) => a.name.localeCompare(b.name));
+    getBreedsForShow(){
+      const br = this.breedList.slice(0, this.offset + OFFSET_STEP);
+      if (this.sortAlphabet) {
+        br.sort((a, b) => a.name.localeCompare(b.name));
       } else {
-        this.breeds.sort(function () {
-          return 0.5 - Math.random()
-        });
+        br.sort(() => {return 0.5 - Math.random()});
       }
 
-    }
-  }
+      return br
+    },
+
+    ...mapActions(['getBreedList', 'getBreedRandomImage'])
+  },
 }
 </script>
 

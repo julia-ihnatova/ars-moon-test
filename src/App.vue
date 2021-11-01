@@ -4,7 +4,7 @@
     <div class="container">
       <div class="top-options">
         <BreedSelector/>
-        <SwitchSort v-if="$route.name !== 'Breed'"/>
+        <SwitchSort v-if="$route.name === 'Home'"/>
       </div>
       <router-view :key="$route.fullPath"></router-view>
     </div>

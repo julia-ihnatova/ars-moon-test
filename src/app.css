@@ -27,17 +27,22 @@ a, a:hover, a:focus {
 }
 
 .container {
-  padding: 0 60px;
+  padding: 0 60px 60px 60px;
   background: #151419;
   flex: 1;
 }
 
 .image-list {
   display: grid;
-  grid-template-columns:repeat(3, 1fr);
+  grid-template-columns:1fr;
   grid-template-rows: auto;
   column-gap: 30px;
   row-gap: 30px;
+}
 
+@media (min-width: 728px) {
+  .image-list {
+    grid-template-columns:repeat(3, 1fr);
+  }
 }
 

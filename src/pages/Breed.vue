@@ -2,7 +2,7 @@
   <div class="container" v-scroll="onScroll">
     <div class="image-list">
       <div class="image-item" v-for="(photo, index) in images" :key="index">
-        <BreedItem :breedName="name" :breedRandomImage="photo"/>
+        <BreedItem :name="name" :image="photo"/>
       </div>
     </div>
   </div>
@@ -17,9 +17,10 @@ export default {
   data() {
     return {
       loading: false,
-      images: [],
-      count: 20,
+      allImages: [],
+      offset: 0,
       name: '',
+      images:[]
     }
   },
   components: {BreedItem},
@@ -36,25 +37,38 @@ export default {
      this.loadBreed();
   },
   methods: {
-
-    onScroll() {
-
-    },
     async loadBreed() {
       try {
         this.loading = true;
 
         if(this.breedList < 0 || this.breedList.length === 0) return;
-
         if (this.breedList[this.breedIndex].images) {
-          this.images = this.breedList[this.breedIndex].images;
+          this.allImages = this.breedList[this.breedIndex].images;
         } else {
-          this.images = await this.getSelectedBreedImages(this.$route.params.name);
+          this.allImages = await this.getSelectedBreedImages(this.$route.params.name);
         }
+
+        this.loadMoreImages();
+
       } catch (ex) {
         console.log(ex);
       } finally {
         this.loading = false;
+      }
+    },
+    loadMoreImages(){
+        this.loading = true;
+        this.images =  this.allImages.slice(0, this.offset + 20);
+
+      // Increase offset
+        this.offset += 20;
+        this.loading = false;
+
+    },
+    onScroll() {
+      let bottomOfWindow = document.documentElement.scrollTop + window.innerHeight >= document.documentElement.offsetHeight;
+      if (bottomOfWindow) {
+        this.loadMoreImages();
       }
     },
     ...mapActions(["getSelectedBreedImages"]),
